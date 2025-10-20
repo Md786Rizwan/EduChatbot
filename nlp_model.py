@@ -1,15 +1,14 @@
 from transformers import pipeline
 
-# Load Question Answering pipeline
-qa_pipeline = pipeline("question-answering")
+# Load a conversational pipeline for dialogue (from Hugging Face)
+chatbot_pipeline = pipeline("conversational", model="microsoft/DialoGPT-medium")
 
 def get_counseling_response(user_input):
-    educational_context = (
-        "Students often need help with career planning, stress management, "
-        "study tips, and goal setting. As a counselor, provide clear, practical advice."
-    )
     try:
-        output = qa_pipeline(question=user_input, context=educational_context)
-        return output["answer"]
-    except:
-        return "Sorry, I'm still learning! Please rephrase your question."
+        response = chatbot_pipeline(user_input)
+        # Extract answer text from pipeline's response
+        if isinstance(response, list):
+            return response[0]['generated_text']
+        return str(response)
+    except Exception as e:
+        return "I'm here to help, can you ask in a different way?"
