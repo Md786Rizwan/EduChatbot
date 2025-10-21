@@ -2,12 +2,12 @@
 {% block content %}
 <div class="form-container">
     {% if success %}
-      <p class="success">Thank you for your feedback!</p>
+        <p class="success">Thank you for your feedback!</p>
     {% endif %}
-    <form method="POST" action="/submit_feedback">
+    <form method="POST" action="/feedback">
         <h3>Send Feedback</h3>
-        <input type="text" name="name" placeholder="Your Name"><br>
-        <textarea name="message" placeholder="Your feedback..."></textarea><br>
+        <input type="text" name="name" placeholder="Your Name"><br><br>
+        <textarea name="message" placeholder="Your feedback..."></textarea><br><br>
         <button type="submit">Submit</button>
     </form>
 </div>

@@ -1,10 +1,20 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="chat-container">
-    <h2>Educational Counseling Bot</h2>
-    <div id="chatbox"></div>
-    <input type="text" id="user-input" placeholder="Type your question...">
-    <button id="send-btn">Send</button>
-</div>
-<script src="{{ url_for('static', filename='app.js') }}"></script>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EduChatbot - Student Counseling</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('feedback') }}">Feedback</a>
+        </nav>
+        {% block content %}{% endblock %}
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

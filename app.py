@@ -4,6 +4,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
+
 LOG_FILE = "chat_logs.txt"
 
 def save_log(user, bot):
@@ -18,9 +19,16 @@ def home():
 def login():
     return render_template("login.html")
 
-@app.route("/feedback")
+@app.route("/feedback", methods=["GET", "POST"])
 def feedback():
-    return render_template("feedback.html")
+    success = False
+    if request.method == "POST":
+        name = request.form.get("name")
+        message = request.form.get("message")
+        with open("feedback.txt", "a", encoding="utf-8") as f:
+            f.write(f"{datetime.now()} | {name}: {message}\n")
+        success = True
+    return render_template("feedback.html", success=success)
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -28,14 +36,6 @@ def chat():
     bot_reply = respond(user_message)
     save_log(user_message, bot_reply)
     return jsonify({"response": bot_reply})
-
-@app.route("/submit_feedback", methods=["POST"])
-def submit_feedback():
-    name = request.form.get("name")
-    message = request.form.get("message")
-    with open("feedback.txt", "a") as f:
-        f.write(f"{name}: {message}\n")
-    return render_template("feedback.html", success=True)
 
 if __name__ == "__main__":
     app.run(debug=True)
