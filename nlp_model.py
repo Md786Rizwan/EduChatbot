@@ -1,16 +1,13 @@
-from transformers import pipeline
+from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
 
-chatbot_pipeline = pipeline("conversational", model="microsoft/DialoGPT-medium")
-sentiment_pipeline = pipeline("sentiment-analysis")
+tokenizer = BlenderbotTokenizer.from_pretrained("facebook/blenderbot-400M-distill")
+model = BlenderbotForConditionalGeneration.from_pretrained("facebook/blenderbot-400M-distill")
 
 def get_counseling_response(user_input):
     try:
-        sentiment = sentiment_pipeline(user_input)[0]
-        response = chatbot_pipeline(user_input)
-        if isinstance(response, list):
-            chat_out = response[0]['generated_text']
-        else:
-            chat_out = str(response)
-        return f"{chat_out} (Your mood seems: {sentiment['label']})"
+        inputs = tokenizer(user_input, return_tensors="pt")
+        reply_ids = model.generate(**inputs)
+        response = tokenizer.batch_decode(reply_ids, skip_special_tokens=True)[0]
+        return response
     except Exception as e:
-        return "I'm here to help, can you ask in a different way?"
+        return "I'm here for you. Can you rephrase your question?"
